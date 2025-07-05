@@ -24,6 +24,8 @@ const TaskSchema = new Schema<TaskDoc>({
         resolution: { type: String, required: true },
         path: { type: String, required: true },
     }],
+}, {
+    versionKey: false,
 });
 
 const TaskModel = model<TaskDoc>('Task', TaskSchema, 'tasks');
@@ -31,12 +33,30 @@ const TaskModel = model<TaskDoc>('Task', TaskSchema, 'tasks');
 
 export class MongoTaskRepository implements ITaskRepository {
 
+    async createTask(taskData: Omit<Task, 'taskId' | 'createdAt' | 'updatedAt'>): Promise<Task> {
+        const newTaskDoc = new TaskModel({
+            ...taskData,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        });
+        const savedTaskDoc = await newTaskDoc.save();
+        return this.mapDocumentToCreatedTask(savedTaskDoc);
+    }
+
     async getTaskById(id: string): Promise<Task | null> {
         if (!Types.ObjectId.isValid(id)) {
             return null;
         }
         const taskDoc = await TaskModel.findById(id);
         return taskDoc ? this.mapDocumentToTask(taskDoc) : null;
+    }
+
+    private mapDocumentToCreatedTask(doc: TaskDoc): Task {
+        return {
+            taskId: (doc._id as any).toString(),
+            status: doc.status,
+            price: doc.price
+        };
     }
 
     private mapDocumentToTask(doc: TaskDoc): Task {
