@@ -1,4 +1,3 @@
-
 export interface Task {
     id?: string;
     status: 'pending' | 'completed' | 'failed';
