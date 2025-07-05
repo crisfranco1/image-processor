@@ -51,6 +51,30 @@ export class MongoTaskRepository implements ITaskRepository {
         return taskDoc ? this.mapDocumentToTask(taskDoc) : null;
     }
 
+    async updateTask(task: Task): Promise<Task> {
+        if (!task.taskId) {
+            throw new Error('Task must have an ID to be updated.');
+        }
+        if (!Types.ObjectId.isValid(task.taskId)) {
+            throw new Error(`Invalid task ID: ${task.taskId}`);
+        }
+        const updatedDoc = await TaskModel.findByIdAndUpdate(
+            task.taskId,
+            {
+                $set: {
+                    status: task.status,
+                    updatedAt: new Date(),
+                    images: task.images
+                }
+            },
+            { new: true, runValidators: true }
+        );
+        if (!updatedDoc) {
+            throw new Error(`Task with ID ${task.taskId} not found for update.`);
+        }
+        return this.mapDocumentToTask(updatedDoc);
+    }
+
     private mapDocumentToCreatedTask(doc: TaskDoc): Task {
         return {
             taskId: (doc._id as any).toString(),
@@ -66,8 +90,8 @@ export class MongoTaskRepository implements ITaskRepository {
             price: doc.price,
             images: doc.images.map(img => ({
                 resolution: img.resolution,
-                path: img.path,
-            })),
+                path: img.path
+            }))
         };
     }
 

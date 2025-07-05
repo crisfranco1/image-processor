@@ -1,3 +1,8 @@
+export interface Image {
+  resolution: string;
+  path: string;
+}
+
 export interface Task {
   taskId?: string;
   status?: 'pending' | 'completed' | 'failed';
@@ -5,8 +10,5 @@ export interface Task {
   createdAt?: Date;
   updatedAt?: Date;
   originalPath?: string;
-  images?: {
-    resolution: string;
-    path: string;
-  }[];
+  images?: Image[];
 }
