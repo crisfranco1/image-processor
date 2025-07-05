@@ -1,6 +1,6 @@
 export interface Task {
   id?: string;
-  status: 'pending' | 'completed' | 'failed'; // Using a union type for status
+  status: 'pending' | 'completed' | 'failed';
   price: number;
   createdAt?: Date;
   updatedAt?: Date;
