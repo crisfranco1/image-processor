@@ -83,7 +83,7 @@ Before you begin, ensure you have the following installed:
 
     ```env
     PORT=3000
-    MONGO_URI=mongodb://localhost:27017/image?processor_db
+    MONGO_URI=mongodb://localhost:27017/image_processor_db
     ```
     *If your MongoDB is running on a different host or port, adjust `MONGO_URI` accordingly.*
 
