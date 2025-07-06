@@ -46,7 +46,12 @@ export class ImageProcessor {
                     }).jpeg({ quality: 80 }).toFile(outputPath);
                 outputs.push({
                     resolution: resolution.toString(),
-                    path: outputPath,
+                    path: path.join(
+                        '/output',
+                        imageFileName,
+                        resolution.toString(),
+                        outputFileName
+                    ),
                 });
                 console.log(`Generated image: ${outputPath}`);
             } catch (error) {
