@@ -8,6 +8,8 @@ import { TaskController } from './interfaces/controllers/TaskController';
 import { ImageProcessor } from './infrastructure/services/ImageProcessor';
 import path from 'path';
 import fs from 'fs';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/swagger'; 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -39,6 +41,9 @@ app.use(express.json());
 // Routes
 app.post('/tasks', taskController.createTask);
 app.get('/tasks/:taskId', taskController.getTaskById);
+
+// Serve the Swagger UI at /api-docs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Start the server
 app.listen(PORT, () => {
