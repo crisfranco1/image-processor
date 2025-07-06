@@ -20,17 +20,35 @@ describe('GetTaskByIdUseCase', () => {
         const mockTask: Task = {
             taskId: taskId,
             status: 'pending',
-            price: 10,
-            originalPath: 'path/to/image.jpg',
-            images: [],
-            createdAt: new Date(),
-            updatedAt: new Date()
+            price: 10
         };
         mockTaskRepository.getTaskById.mockResolvedValue(mockTask);
         const result = await getTaskByIdUseCase.execute(taskId);
         expect(mockTaskRepository.getTaskById).toHaveBeenCalledTimes(1);
         expect(mockTaskRepository.getTaskById).toHaveBeenCalledWith(taskId);
         expect(result).toEqual(mockTask);
+    });
+
+    // ...existing code...
+
+    it('should return the task if it is completed', async () => {
+        const taskId = 'completed-task-id';
+        const mockTask: Task = {
+            taskId: taskId,
+            status: 'completed',
+            price: 20,
+            images: [
+                { resolution: '1024px', path: '/output/image-1024.jpg' },
+                { resolution: '800px', path: 'output/image-800.jpg' }
+            ]
+        };
+        mockTaskRepository.getTaskById.mockResolvedValue(mockTask);
+        const result = await getTaskByIdUseCase.execute(taskId);
+        expect(mockTaskRepository.getTaskById).toHaveBeenCalledTimes(1);
+        expect(mockTaskRepository.getTaskById).toHaveBeenCalledWith(taskId);
+        expect(result).toEqual(mockTask);
+        expect(result?.status).toBe('completed');
+        expect(result?.images?.length).toBe(2);
     });
 
     it('should return null if the task is not found', async () => {
