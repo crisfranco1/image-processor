@@ -48,7 +48,6 @@ export class TaskController {
     *       400:
     *         description: Bad request, missing required fields
    */
-
   async createTask(req: Request, res: Response): Promise<void> {
     try {
       const { originalPath } = req.body;

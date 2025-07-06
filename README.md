@@ -13,6 +13,7 @@ A RESTful API for image processing using Node.js, Express, MongoDB (Mongoose), a
     * [Development Mode](#development-mode)
     * [Production Mode](#production-mode)
 * [API Endpoints](#api-endpoints)
+    * [Swagger Documentation (GET /api-docs)](#swagger-documentation-get-api-docs)
     * [Get Task by ID (GET /tasks/:taskId)](#get-task-by-id-get-taskstaskid)
     * [Create New Task (POST /tasks)](#create-new-task-post-tasks)
 * [Image Processing](#image-processing)
@@ -39,6 +40,7 @@ This project is structured using a Hexagonal Architecture (also known as Ports a
     * `services`: `ImageProcessor` (an adapter for image processing using `sharp`).
 * **`src/interfaces`**: Contains external facing adapters, such as REST API controllers, that translate external requests into calls to the application layer and translate application responses back to the external format.
     * `controllers`: `TaskController` handles HTTP requests and responses.
+* **`src/config`**: This directory is for application-wide configuration files.
 * **`src/index.ts`**: The application's entry point, responsible for bootstrapping the Express app and wiring up dependencies (Dependency Injection).
 
 ## Prerequisites
@@ -125,6 +127,14 @@ For deploying your application to a production environment, it's best practice t
 
 ## API Endpoints
 The API will be accessible at `http://localhost:3000` (or the port you configured in your `.env` file). You can use tools like Postman or command-line utilities like `curl` to test these endpoints.
+
+### Swagger Documentation (GET /api-docs)
+
+This endpoint serves the interactive API documentation. It's a great way to explore and test the API directly from your browser.
+
+* **URL:** `http://localhost:3000/api-docs`
+* **Method:** `GET`
+* **Response:** An interactive Swagger UI page.
 
 ### Get Task by ID (GET /tasks/:taskId)
 
