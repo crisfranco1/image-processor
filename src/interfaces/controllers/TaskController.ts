@@ -20,9 +20,6 @@ export class TaskController {
     this.getTaskById = this.getTaskById.bind(this);
   }
 
-
-
-
   /**
    * @swagger
     * /tasks:

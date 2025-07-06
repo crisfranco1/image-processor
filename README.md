@@ -124,7 +124,6 @@ For deploying your application to a production environment, it's best practice t
     The API will be available at `http://localhost:3000` (or the port you set in `.env`).
 
 
-
 ## API Endpoints
 The API will be accessible at `http://localhost:3000` (or the port you configured in your `.env` file). You can use tools like Postman or command-line utilities like `curl` to test these endpoints.
 
@@ -172,10 +171,18 @@ Creates a new task in the database. If an `originalPath` is provided, this will 
 * **Body (raw JSON):**
     ```json
     {
-      "originalPath": "input/my_image.jpg" # Required for image processing. Path should be relative to the project root.
+      "originalPath": "input/my_image.jpg" // Can be a local path or an internet URL
     }
     ```
-    *Ensure the image file specified in `originalPath` exists in your project's `input/` directory.*
+    or
+    ```json
+    {
+      "originalPath": "https://example.com/image.jpg" // Can be a local path or an internet URL
+    }
+    ```
+
+    *The `originalPath` field accepts both local paths (e.g., `input/my_image.jpg`) and image URLs from the internet (e.g., `https://example.com/image.jpg`).*
+    *If a local path is provided, the image must exist in the project's `input/` directory. If a URL is provided, the image will be downloaded and processed automatically.*
 
 * **Response (201 Created):**
     * **Immediately after creation (if image processing is triggered):**
