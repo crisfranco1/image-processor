@@ -13,14 +13,33 @@ export class ImageProcessor {
 
     async processImage(originalImagePath: string, taskId: string, resolutions: number[]): Promise<Image[]> {
         const outputs: Image[] = [];
-        const imageFileName = path.parse(originalImagePath).name;
+        let imageFileName: string;
+        let imageInput: string | Buffer = originalImagePath;
+        // Check if originalImagePath is a URL
+        if (/^https?:\/\//i.test(originalImagePath)) {
+            const fetch = (await import('node-fetch')).default;
+            const urlObj = new URL(originalImagePath);
+            imageFileName = path.parse(urlObj.pathname).name;
+            try {
+                const response = await fetch(originalImagePath);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+                }
+                imageInput = Buffer.from(await response.arrayBuffer());
+            } catch (error) {
+                console.error(`Error downloading image from URL: ${originalImagePath}`, error);
+                throw new Error(`Failed to download image: ${error instanceof Error ? error.message : String(error)}`);
+            }
+        } else {
+            imageFileName = path.parse(originalImagePath).name;
+        }
         for (const resolution of resolutions) {
             const taskOutputDir = path.join(this.outputDir, imageFileName, resolution.toString());
             await fs.mkdir(taskOutputDir, { recursive: true });
             const outputFileName = `${taskId}.jpg`;
             const outputPath = path.join(taskOutputDir, outputFileName);
             try {
-                await sharp(originalImagePath)
+                await sharp(imageInput)
                     .resize(resolution, resolution, {
                         fit: sharp.fit.inside,
                         withoutEnlargement: true
