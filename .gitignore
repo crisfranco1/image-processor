@@ -137,3 +137,11 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Ignore all files in input and output folders
+input/*
+output/*
+
+# But keep the folders
+!input/
+!output/
