@@ -29,8 +29,6 @@ describe('GetTaskByIdUseCase', () => {
         expect(result).toEqual(mockTask);
     });
 
-    // ...existing code...
-
     it('should return the task if it is completed', async () => {
         const taskId = 'completed-task-id';
         const mockTask: Task = {

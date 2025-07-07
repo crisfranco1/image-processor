@@ -29,8 +29,7 @@ const TaskSchema = new Schema<TaskDoc>({
     versionKey: false,
 });
 
-const TaskModel = model<TaskDoc>('Task', TaskSchema, 'tasks');
-
+export const TaskModel = model<TaskDoc>('Task', TaskSchema, 'tasks');
 
 export class MongoTaskRepository implements ITaskRepository {
 

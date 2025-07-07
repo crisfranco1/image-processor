@@ -1,21 +1,19 @@
 module.exports = {
-    preset: 'ts-jest',             // Use ts-jest for TypeScript support
-    testEnvironment: 'node',       // Test environment (Node.js)
+    preset: 'ts-jest',
+    testEnvironment: 'node',
     testMatch: [
-        "**/__tests__/**/*.test.ts", // Look for .test.ts files in __tests__ subdirectories
+        "**/__tests__/**/*.test.ts",
     ],
     moduleNameMapper: {
-        // This maps paths so Jest can resolve imports correctly.
-        // It's useful if you're using path aliases in tsconfig.json.
-        // For our current simple structure, `modulePaths` might be sufficient,
-        // but this is good practice for complex projects.
         '^@/(.*)$': '<rootDir>/src/$1',
     },
-    modulePaths: ['<rootDir>/src'], // Look for modules in the src directory
+    modulePaths: ['<rootDir>/src'],
     collectCoverageFrom: [
-        "src/application/use-cases/**/*.ts", // Collect coverage for use cases
-        "!src/application/use-cases/**/index.ts" // Exclude index files if any
+        "src/application/use-cases/**/*.ts",
+        "!src/application/use-cases/**/index.ts"
     ],
     coverageDirectory: "coverage",
     coverageReporters: ["text", "lcov"],
+    globalSetup: '<rootDir>/__tests__/setup/mongo-setup.ts',
+    globalTeardown: '<rootDir>/__tests__/setup/mongo-teardown.ts',
 };
