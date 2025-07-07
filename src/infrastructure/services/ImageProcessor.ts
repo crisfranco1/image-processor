@@ -2,6 +2,7 @@
 import sharp from 'sharp';
 import fs from 'fs/promises';
 import path from 'path';
+import crypto from 'crypto';
 import { Image } from '../../domain/entities/Task';
 
 export class ImageProcessor {
@@ -11,7 +12,7 @@ export class ImageProcessor {
         this.outputDir = outputDir;
     }
 
-    async processImage(originalImagePath: string, taskId: string, resolutions: number[]): Promise<Image[]> {
+    async processImage(originalImagePath: string, resolutions: number[]): Promise<Image[]> {
         const outputs: Image[] = [];
         let imageFileName: string;
         let imageInput: string | Buffer = originalImagePath;
@@ -36,30 +37,40 @@ export class ImageProcessor {
         for (const resolution of resolutions) {
             const taskOutputDir = path.join(this.outputDir, imageFileName, resolution.toString());
             await fs.mkdir(taskOutputDir, { recursive: true });
-            const outputFileName = `${taskId}.jpg`;
-            const outputPath = path.join(taskOutputDir, outputFileName);
+            let resizedBuffer: Buffer;
             try {
-                await sharp(imageInput)
+                resizedBuffer = await sharp(imageInput)
                     .resize(resolution, resolution, {
                         fit: sharp.fit.inside,
                         withoutEnlargement: true
-                    }).jpeg({ quality: 80 }).toFile(outputPath);
-                outputs.push({
-                    resolution: resolution.toString(),
-                    path: path.join(
-                        '/output',
-                        imageFileName,
-                        resolution.toString(),
-                        outputFileName
-                    ),
-                });
-                console.log(`Generated image: ${outputPath}`);
+                    })
+                    .jpeg({ quality: 80 })
+                    .toBuffer();
             } catch (error) {
                 console.error(`Error processing image for resolution ${resolution}px: ${originalImagePath}`, error);
                 throw new Error(`Failed to generate ${resolution}px image: ${error instanceof Error ? error.message : String(error)}`);
             }
+            const imageHash = this.createHashMd5(resizedBuffer);
+            const outputFileName = `${imageHash}.jpg`;
+            const outputPath = path.join(taskOutputDir, outputFileName);
+            await fs.writeFile(outputPath, resizedBuffer);
+            outputs.push({
+                id: imageHash,
+                resolution: resolution.toString(),
+                path: path.join(
+                    '/output',
+                    imageFileName,
+                    resolution.toString(),
+                    outputFileName
+                ),
+            });
+            console.log(`Generated image: ${outputPath}`);
         }
         return outputs;
+    }
+
+    private createHashMd5(buffer: Buffer): string {
+        return crypto.createHash('md5').update(buffer).digest('hex');
     }
 
 }

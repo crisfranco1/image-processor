@@ -23,6 +23,7 @@ const TaskSchema = new Schema<TaskDoc>({
     images: [{
         resolution: { type: String, required: true },
         path: { type: String, required: true },
+        _id: false
     }],
 }, {
     versionKey: false,

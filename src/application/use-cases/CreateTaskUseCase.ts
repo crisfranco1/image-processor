@@ -75,7 +75,7 @@ export class CreateTaskUseCase {
                     return;
                 }
                 const resolutions = [1024, 800];
-                const generatedImages: Image[] = await this.imageProcessor.processImage(originalPath, taskId, resolutions);
+                const generatedImages: Image[] = await this.imageProcessor.processImage(originalPath, resolutions);
                 taskToUpdate.status = 'completed';
                 taskToUpdate.images = generatedImages;
                 taskToUpdate.updatedAt = new Date();
