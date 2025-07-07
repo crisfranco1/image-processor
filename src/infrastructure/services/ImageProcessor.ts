@@ -55,7 +55,6 @@ export class ImageProcessor {
             const outputPath = path.join(taskOutputDir, outputFileName);
             await fs.writeFile(outputPath, resizedBuffer);
             outputs.push({
-                id: imageHash,
                 resolution: resolution.toString(),
                 path: path.join(
                     '/output',
