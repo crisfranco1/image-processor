@@ -31,7 +31,7 @@ describe('GetTaskByIdUseCase (Integration Test)', () => {
   it('should return the task if found in the database', async () => {
     const mockTaskData: Omit<Task, 'taskId' | 'createdAt' | 'updatedAt' | 'images'> = {
       status: 'completed',
-      price: 150.75,
+      price: 14,
       originalPath: 'input/test-image-1.jpg',
     };
     const savedTaskDoc = await TaskModel.create({

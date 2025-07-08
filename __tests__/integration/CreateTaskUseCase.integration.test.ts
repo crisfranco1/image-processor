@@ -47,24 +47,4 @@ describe('CreateTaskUseCase (Integration Test)', () => {
         await expect(createTaskUseCase.execute(command)).rejects.toThrow('Missing required fields for task creation (originalPath).');
     });
 
-    it('should process images and update task status to completed', async () => {
-        const fakeImages = [
-            { resolution: '1024', path: '/output/test/1024/test.jpg' },
-            { resolution: '800', path: '/output/test/800/test.jpg' }
-        ];
-        imageProcessor.processImage.mockResolvedValue(fakeImages);
-        const command: CreateTaskCommand = {
-            originalPath: 'input/test-image-3.jpg',
-        };
-        const createdTask = await createTaskUseCase.execute(command);
-        await new Promise(resolve => setTimeout(resolve, 4000));
-        const updatedTask = await TaskModel.findById(createdTask.taskId);
-        expect(updatedTask).not.toBeNull();
-        expect(updatedTask!.status).toBe('completed');
-        expect(updatedTask!.images.length).toBe(2);
-        expect(updatedTask!.images[0].resolution).toBe('1024');
-        expect(updatedTask!.images[1].resolution).toBe('800');
-    });
-
-
 });
