@@ -21,7 +21,7 @@ describe('CreateTaskUseCase', () => {
             originalPath: 'input/image.jpg'
         };
         const createdTask: Task = {
-            taskId: 'abc123',
+            taskId: '686bfa118ba5a601d9183dea',
             status: 'pending',
             price: 10,
             originalPath: 'input/image.jpg',
@@ -43,7 +43,7 @@ describe('CreateTaskUseCase', () => {
             originalPath: url
         };
         const createdTask: Task = {
-            taskId: 'url123',
+            taskId: '686bfa118ba5a601d9183dea',
             status: 'pending',
             price: 10,
             originalPath: url,
