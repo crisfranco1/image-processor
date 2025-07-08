@@ -16,7 +16,7 @@ describe('CreateTaskUseCase', () => {
         createTaskUseCase = new CreateTaskUseCase(mockTaskRepository, mockImageProcessor);
     });
 
-    it('should create a new task and return it', async () => {
+    it('should create a new task from a local and return it', async () => {
         const command: CreateTaskCommand = {
             originalPath: 'input/image.jpg'
         };

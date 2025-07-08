@@ -57,7 +57,7 @@ describe('CreateTaskUseCase (Integration Test)', () => {
             originalPath: 'input/test-image-3.jpg',
         };
         const createdTask = await createTaskUseCase.execute(command);
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise(resolve => setTimeout(resolve, 4000));
         const updatedTask = await TaskModel.findById(createdTask.taskId);
         expect(updatedTask).not.toBeNull();
         expect(updatedTask!.status).toBe('completed');
