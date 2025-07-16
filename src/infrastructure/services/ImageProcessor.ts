@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
 import { Image } from '../../domain/entities/Task';
+import { get } from 'http';
 
 export class ImageProcessor {
     private outputDir: string;
@@ -21,16 +22,7 @@ export class ImageProcessor {
             const fetch = (await import('node-fetch')).default;
             const urlObj = new URL(originalImagePath);
             imageFileName = path.parse(urlObj.pathname).name;
-            try {
-                const response = await fetch(originalImagePath);
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
-                }
-                imageInput = Buffer.from(await response.arrayBuffer());
-            } catch (error) {
-                console.error(`Error downloading image from URL: ${originalImagePath}`, error);
-                throw new Error(`Failed to download image: ${error instanceof Error ? error.message : String(error)}`);
-            }
+            imageInput = await this.getImageFromInternet(originalImagePath);
         } else {
             imageFileName = path.parse(originalImagePath).name;
         }
@@ -70,6 +62,21 @@ export class ImageProcessor {
 
     private createHashMd5(buffer: Buffer): string {
         return crypto.createHash('md5').update(buffer).digest('hex');
+    }
+
+
+    private async getImageFromInternet(url: string): Promise<Buffer> {
+        const fetch = (await import('node-fetch')).default;
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+            }
+            return Buffer.from(await response.arrayBuffer());
+        } catch (error) {
+            console.error(`Error downloading image from URL: ${url}`, error);
+            throw new Error(`Failed to download image: ${error instanceof Error ? error.message : String(error)}`);
+        }
     }
 
 }
