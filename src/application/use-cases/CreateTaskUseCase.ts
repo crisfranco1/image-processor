@@ -27,7 +27,7 @@ export class CreateTaskUseCase {
             price: this.generateRandomPrice()
         };
         const newTask = await this.taskRepository.createTask(taskToCreate);
-        if (newTask.status === 'pending') {
+        if (newTask) {
             this.addTaskToProcessingQueue(newTask.taskId!, command.originalPath);
         }
         return newTask;
@@ -78,19 +78,18 @@ export class CreateTaskUseCase {
                 const generatedImages: Image[] = await this.imageProcessor.processImage(originalPath, resolutions);
                 taskToUpdate.status = 'completed';
                 taskToUpdate.images = generatedImages;
-                taskToUpdate.updatedAt = new Date();
                 console.log(`Image processing completed for task ID: ${taskId}`);
             } catch (error: any) {
                 console.error(`Image processing failed for task ID: ${taskId}:`, error);
                 if (taskToUpdate) {
                     taskToUpdate.status = 'failed';
-                    taskToUpdate.updatedAt = new Date();
                 } else {
                     console.error(`Attempted to update status for non-existent task ${taskId} after processing error.`);
                     return;
                 }
             } finally {
                 if (taskToUpdate) {
+                    taskToUpdate.updatedAt = new Date();
                     await this.taskRepository.updateTask(taskToUpdate);
                 }
             }
