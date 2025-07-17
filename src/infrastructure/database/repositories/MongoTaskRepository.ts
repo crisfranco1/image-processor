@@ -18,7 +18,7 @@ const TaskSchema = new Schema<TaskDoc>({
     status: { type: String, required: true, enum: ['pending', 'completed', 'failed'] },
     price: { type: Number, required: true },
     createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date },
     originalPath: { type: String, required: true },
     images: [{
         resolution: { type: String, required: true },
@@ -37,7 +37,6 @@ export class MongoTaskRepository implements ITaskRepository {
         const newTaskDoc = new TaskModel({
             ...taskData,
             createdAt: new Date(),
-            updatedAt: new Date(),
         });
         const savedTaskDoc = await newTaskDoc.save();
         return this.mapDocumentToCreatedTask(savedTaskDoc);

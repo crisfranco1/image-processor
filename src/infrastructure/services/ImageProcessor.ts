@@ -4,7 +4,6 @@ import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
 import { Image } from '../../domain/entities/Task';
-import { get } from 'http';
 
 export class ImageProcessor {
     private outputDir: string;
@@ -19,7 +18,6 @@ export class ImageProcessor {
         let imageInput: string | Buffer = originalImagePath;
         // Check if originalImagePath is a URL
         if (/^https?:\/\//i.test(originalImagePath)) {
-            const fetch = (await import('node-fetch')).default;
             const urlObj = new URL(originalImagePath);
             imageFileName = path.parse(urlObj.pathname).name;
             imageInput = await this.getImageFromInternet(originalImagePath);
