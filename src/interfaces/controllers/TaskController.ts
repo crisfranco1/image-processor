@@ -94,7 +94,6 @@ export class TaskController {
         res.status(404).json({ message: `Task with ID ${taskId} not found.` });
         return;
       }
-
       res.status(200).json(task);
     } catch (error: any) {
       console.error(`Error fetching task with ID ${req.params.id}:`, error);

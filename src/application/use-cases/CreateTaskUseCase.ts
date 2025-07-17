@@ -18,8 +18,8 @@ export class CreateTaskUseCase {
     }
 
     async execute(command: CreateTaskCommand): Promise<Task> {
-        if (!command.originalPath) {
-            throw new Error('Missing required fields for task creation (originalPath).');
+        if (!command.originalPath || !/\.(jpg|jpeg|png|gif|bmp|webp|tiff)$/i.test(command.originalPath)) {
+            throw new Error('Missing required fields or invalid file extension for task creation (originalPath).');
         }
         const taskToCreate: Omit<Task, 'taskId' | 'createdAt' | 'updatedAt'> = {
             ...command,
