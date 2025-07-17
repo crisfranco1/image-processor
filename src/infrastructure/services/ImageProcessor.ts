@@ -16,7 +16,6 @@ export class ImageProcessor {
         const outputs: Image[] = [];
         let imageFileName: string;
         let imageInput: string | Buffer = originalImagePath;
-        // Check if originalImagePath is a URL
         if (/^https?:\/\//i.test(originalImagePath)) {
             const urlObj = new URL(originalImagePath);
             imageFileName = path.parse(urlObj.pathname).name;
@@ -40,8 +39,7 @@ export class ImageProcessor {
                 console.error(`Error processing image for resolution ${resolution}px: ${originalImagePath}`, error);
                 throw new Error(`Failed to generate ${resolution}px image: ${error instanceof Error ? error.message : String(error)}`);
             }
-            const imageHash = this.createHashMd5(resizedBuffer);
-            const outputFileName = `${imageHash}.jpg`;
+            const outputFileName = `${this.createHashMd5(resizedBuffer)}.jpg`;
             const outputPath = path.join(taskOutputDir, outputFileName);
             await fs.writeFile(outputPath, resizedBuffer);
             outputs.push({
